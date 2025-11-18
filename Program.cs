@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace CodeQuestDLC
 {
@@ -6,6 +7,8 @@ namespace CodeQuestDLC
     {
         public static void Main()
         {
+            Console.OutputEncoding = new UTF8Encoding();
+            
             //MENU MESSAGES
             const string msgMainMenu = "===== MAIN MENU - CODEQUEST =====";
             const string msgMenuPlayer = "===== Welcome, {0} the {1} with level {2} =====";
@@ -36,7 +39,20 @@ namespace CodeQuestDLC
             const string msgDayTrained = "You trained for {0} hours and gained {1} exp.";
             const string msgRankObtained = "Congratulations {0}, you reached the tittle of {1}";
             
+            //CHAPTER 2 MESSAGES
+            const string msgEnteredFight = "You will fight a {0}!";
+            const string msgHealthLeft = "The {0} has {1} HP left";
+            const string msgPressToRoll = "Press Enter to roll the dice";
+            const string msgWin = "You defeated a {0}!";
+            const string msgMaxLevel = "You are at max level ({0})!";
+            const string msgNewLevel = "You leveled up! You are level {0}";
             
+            //CHAPTER 2 CONSTANTS
+            string[] monstersName = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍", "Ancient Dragon 🐉" };
+            int[] monstersHp = { 3, 5, 10, 11, 18, 15, 20, 50 };
+            string[] dice = { "   ________\n  /       /|\n /_______/ |\n |       | |\n |   o   | /\n |       |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o     | |\n |       | /\n |     o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o     | |\n |   o   | /\n |     o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o   o | |\n |       | /\n | o   o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o   o | |\n |   o   | /\n | o   o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o   o | |\n | o   o | /\n | o   o |/\n '-------'" };
+
+
             //Menu variables
             int menuOption;
             string menuOptionStr;
@@ -54,6 +70,13 @@ namespace CodeQuestDLC
             const int trainingDays = 5;
             const int maxTrainingHours = 24;
             const int maxTrainingExp = 10;
+            
+            //Chapter 2 variables
+            int diceNumber;
+            int monsterIndex;
+            string monster;
+            int monsterHeath;
+            
             
             
             do
@@ -137,6 +160,24 @@ namespace CodeQuestDLC
                                 break;
                         }
                         Console.WriteLine(msgRankObtained,name,title);
+                        break;
+                    case 2:
+                        monsterIndex = rand.Next(0, monstersName.GetLength(0));
+                        monster = monstersName[monsterIndex];
+                        monsterHeath = monstersHp[monsterIndex];
+                        Console.WriteLine(msgEnteredFight,monster);
+                        while (monsterHeath > 0)
+                        {
+                            Console.WriteLine(msgHealthLeft,monster,monsterHeath);
+                            Console.Write(msgPressToRoll);
+                            Console.ReadLine();
+                            diceNumber = rand.Next(1, 7);
+                            Console.WriteLine(dice[diceNumber-1]);
+                            monsterHeath -= diceNumber;
+                        }
+                        Console.WriteLine(msgWin, monster);
+                        level = (level == 5) ? 5 : level + 1;
+                        Console.WriteLine(level == 5 ? $"{msgMaxLevel}" : $"{msgNewLevel}", level);
                         break;
                     
                     default:
