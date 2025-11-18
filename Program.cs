@@ -20,7 +20,9 @@ namespace CodeQuestDLC
             const string msgMenuOptionBlocked = " (Blocked)";
             const string msgMenuOptionNew = " (New!)";
             const string msgMenuOptionUpdated = " (Updated!)";
-
+            const string msgMenuIncorrectOption = "Incorrect option selected\nTry again.";
+            const string msgMenuExit = "Exiting...";
+            
             //TITTLE MESSAGES
             const string titleLevel0 = "Raoden el Elantrí";
             const string titleLevel1 = "Zyn el Buguejat";
@@ -29,7 +31,10 @@ namespace CodeQuestDLC
             const string titleLevel4 = "ITB-Wizard el Gris";
             
             //CHAPTER 1 MESSAGES
+            const string msgAskName = "Tell us your name wizard: ";
             const string msgInitialTraining = "Started training for {0} days.";
+            const string msgDayTrained = "You trained for {0} hours and gained {1} exp.";
+            const string msgRankObtained = "Congratulations {0}, you reached the tittle of {1}";
             
             
             //Menu variables
@@ -87,12 +92,56 @@ namespace CodeQuestDLC
                     Console.WriteLine(msgMenuOptionBlocked);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMenuOption8);
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     menuOptionStr = Console.ReadLine();
                 } while (!int.TryParse(menuOptionStr, out menuOption));
 
                 switch (menuOption)
                 {
+                    case 0:
+                        Console.WriteLine(msgMenuExit);
+                        break;
                     case 1:
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write(msgAskName);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        name = Console.ReadLine();
+                        Console.WriteLine(msgInitialTraining);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            int dayExp = rand.Next(1, maxTrainingExp+1);
+                            int trainingHours = rand.Next(1, maxTrainingHours + 1);
+                            Console.WriteLine(msgDayTrained,trainingHours,dayExp);
+                            exp += dayExp;
+                        }
+
+                        switch (exp)
+                        {
+                            case > 40:
+                                title = titleLevel4;
+                                break;
+                            case > 35:
+                                title = titleLevel3;
+                                break;
+                            case > 30:
+                                title = titleLevel2;
+                                break;
+                            case > 20:
+                                title = titleLevel1;
+                                break;
+                            case < 20:
+                                title = titleLevel0;
+                                break;
+                            default:
+                                title = titleLevel0;
+                                break;
+                        }
+                        Console.WriteLine(msgRankObtained,name,title);
+                        break;
+                    
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(msgMenuIncorrectOption);
                         break;
                 }
             } while (menuOption != 0);
