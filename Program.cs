@@ -47,11 +47,23 @@ namespace CodeQuestDLC
             const string msgMaxLevel = "You are at max level ({0})!";
             const string msgNewLevel = "You leveled up! You are level {0}";
             
+            //CHAPTER 3 MESSAGES
+            const string msgEnterMine = "You entered the mine.\nYou have {0} tries to mine for gold.";
+            const string msgTriesLeft = "You have {0} tries left.";
+            const string msgFoundCoin = "You found a coin! you win {0} bits";
+            const string msgFoundNothing = "You mined and founded nothing.";
+            const string msgMapLayout = "[{0}]";
+            const string msgMineSelect = "Select where you want to mine: {0} [1, {1}]";
+            
             //CHAPTER 2 CONSTANTS
             string[] monstersName = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍", "Ancient Dragon 🐉" };
             int[] monstersHp = { 3, 5, 10, 11, 18, 15, 20, 50 };
             string[] dice = { "   ________\n  /       /|\n /_______/ |\n |       | |\n |   o   | /\n |       |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o     | |\n |       | /\n |     o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o     | |\n |   o   | /\n |     o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o   o | |\n |       | /\n | o   o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o   o | |\n |   o   | /\n | o   o |/\n '-------'", "   ________\n  /       /|\n /_______/ |\n | o   o | |\n | o   o | /\n | o   o |/\n '-------'" };
 
+            //CHAPTER 3 CONSTANTS
+            const int mapWidth = 5;
+            const int mapHeight = 5;
+            const int startingTries = 5;
 
             //Menu variables
             int menuOption;
@@ -77,7 +89,10 @@ namespace CodeQuestDLC
             string monster;
             int monsterHeath;
             
-            
+            //Chapter 3 variables
+            string[,] backMap = new string[mapWidth, mapHeight];
+            string[,] frontMap = new string[mapWidth, mapHeight];
+            int tries;
             
             do
             {
@@ -179,6 +194,43 @@ namespace CodeQuestDLC
                         level = (level == 5) ? 5 : level + 1;
                         Console.WriteLine(level == 5 ? $"{msgMaxLevel}" : $"{msgNewLevel}", level);
                         break;
+                    case 3:
+                        //Setup map
+                        for (int w = 0; w < backMap.GetLength(0); w++)
+                        {
+                            for (int h = 0; h < backMap.GetLength(1); h++)
+                            {
+                                backMap[w, h] = rand.Next(0, 5) == 1 ? "1" : "0";
+                            }
+                        }
+                        for (int w = 0; w < backMap.GetLength(0); w++)
+                        {
+                            for (int h = 0; h < backMap.GetLength(1); h++)
+                            {
+                                backMap[w, h] = "➖";
+                            }
+                        }
+                        
+                        Console.WriteLine(msgEnterMine);
+                        tries = startingTries;
+                        while (tries > 0)
+                        {
+                            tries--;
+                            for (int w = 0; w < frontMap.GetLength(0); w++)
+                            {
+                                for (int h = 0; h < frontMap.GetLength(1); h++)
+                                {
+                                    Console.Write(msgMapLayout, frontMap[w,h]);
+                                }
+                                Console.WriteLine();
+                            }
+                            Console.WriteLine(msgTriesLeft, tries);
+                            
+                            //TODO: Finish chapter 3
+                        }
+                        
+                        break;
+                        
                     
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
