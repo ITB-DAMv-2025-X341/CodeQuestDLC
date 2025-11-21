@@ -48,12 +48,14 @@ namespace CodeQuestDLC
             const string msgNewLevel = "You leveled up! You are level {0}";
             
             //CHAPTER 3 MESSAGES
-            const string msgEnterMine = "You entered the mine.\nYou have {0} tries to mine for gold.";
+            const string msgEnterMine = "You entered the mine.";
             const string msgTriesLeft = "You have {0} tries left.";
             const string msgFoundCoin = "You found a coin! you win {0} bits";
             const string msgFoundNothing = "You mined and founded nothing.";
             const string msgMapLayout = "[{0}]";
             const string msgMineSelect = "Select where you want to mine: {0} [1, {1}]";
+            const string msgAlreadyMined = "You already mined this location. Try another one.";
+            const string msgMineOutOfTries = "You are out of tries! You exit the mine with now {0} bits.";
             
             //CHAPTER 2 CONSTANTS
             string[] monstersName = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍", "Ancient Dragon 🐉" };
@@ -76,6 +78,7 @@ namespace CodeQuestDLC
             string name = "";
             string title = "";
             int level = 0;
+            int bits = 0;
             
             //Chapter 1 variables
             int exp = 0;
@@ -93,6 +96,9 @@ namespace CodeQuestDLC
             string[,] backMap = new string[mapWidth, mapHeight];
             string[,] frontMap = new string[mapWidth, mapHeight];
             int tries;
+            string posXStr, posYStr;
+            int posXin, posYin;
+            
             
             do
             {
@@ -139,6 +145,9 @@ namespace CodeQuestDLC
                     case 0:
                         Console.WriteLine(msgMenuExit);
                         break;
+                    /*
+                     * CHAPTER 1 - TRAINING
+                     */
                     case 1:
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.Write(msgAskName);
@@ -176,6 +185,9 @@ namespace CodeQuestDLC
                         }
                         Console.WriteLine(msgRankObtained,name,title);
                         break;
+                    /*
+                     * CHAPTER 2 - LEVEL UP
+                     */
                     case 2:
                         monsterIndex = rand.Next(0, monstersName.GetLength(0));
                         monster = monstersName[monsterIndex];
@@ -194,20 +206,24 @@ namespace CodeQuestDLC
                         level = (level == 5) ? 5 : level + 1;
                         Console.WriteLine(level == 5 ? $"{msgMaxLevel}" : $"{msgNewLevel}", level);
                         break;
+                    /*
+                     * CHAPTER 3 - LOOT THE MINE
+                     */
                     case 3:
                         //Setup map
                         for (int w = 0; w < backMap.GetLength(0); w++)
                         {
                             for (int h = 0; h < backMap.GetLength(1); h++)
                             {
-                                backMap[w, h] = rand.Next(0, 5) == 1 ? "1" : "0";
+                                int randValue = rand.Next(0, 5);
+                                backMap[w, h] = randValue == 1 ? "1" : "0";
                             }
                         }
                         for (int w = 0; w < backMap.GetLength(0); w++)
                         {
                             for (int h = 0; h < backMap.GetLength(1); h++)
                             {
-                                backMap[w, h] = "➖";
+                                frontMap[w, h] = "➖";
                             }
                         }
                         
@@ -224,11 +240,43 @@ namespace CodeQuestDLC
                                 }
                                 Console.WriteLine();
                             }
-                            Console.WriteLine(msgTriesLeft, tries);
+                            Console.WriteLine(msgTriesLeft, tries + 1);
+                            do
+                            {
+                                Console.WriteLine(msgMineSelect, "X", frontMap.GetLength(0));
+                                posXStr = Console.ReadLine();
+                            } while (!int.TryParse(posXStr, out posXin) || posXin < 1 || posXin > frontMap.GetLength(0));
+
+                            do
+                            {
+                                Console.WriteLine(msgMineSelect, "Y", frontMap.GetLength(1));
+                                posYStr = Console.ReadLine();
+                            } while (!int.TryParse(posYStr, out posYin) || posYin < 1 || posYin > frontMap.GetLength(1));
+
+                            int posX = posXin - 1, posY = posYin - 1;
                             
-                            //TODO: Finish chapter 3
+                            if (frontMap[posX, posY] != "➖")
+                            {
+                                Console.WriteLine(msgAlreadyMined);
+                                tries++;
+                            }
+                            else
+                            {
+                                if (backMap[posX, posY] == "1")
+                                {
+                                    bits += rand.Next(1, 51);
+                                    frontMap[posX, posY] = "🪙";
+                                    Console.WriteLine(msgFoundCoin, bits);
+                                }
+                                else
+                                {
+                                    frontMap[posX, posY] = "❌";
+                                    Console.WriteLine(msgFoundNothing);
+                                }
+                            }
                         }
                         
+                        Console.WriteLine(msgMineOutOfTries, bits);
                         break;
                         
                     
