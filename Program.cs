@@ -70,6 +70,20 @@ namespace CodeQuestDLC
             //CHAPTER 6 MESSAGES
             const string msgCh6AttacksHeader = "===== ATTACKS =====";
             
+            //CHAPTER 7 MESSAGES
+            const string msgCh7DecodeHeader = "===== ANCIENT SCROLL =====";
+            const string msgCh7Intro = "You fund a mysterious ancient scroll. You try to decode it:";
+            const string msgCh7DecodeOptions = "Choose an option to decode the scroll:\n{0}\n{1}\n{2}";
+            const string msgCh7DecodeOp1 = "1. Decipher spell (remove spaces)";
+            const string msgCh7DecodeOp2 = "2. Count magical runes (vowels)";
+            const string msgCh7DecodeOp3 = "3. Extract secret code (numbers)";
+            const string msgCh7DecodeSuccess = "You have successfully decoded all parts of the scroll";
+            const string msgCh7IncorrectOption = "Incorrect option selected.";
+            const string msgCh7DecodedLine1 = "Deciphered Spell: {0}";
+            const string msgCh7DecodedLine2 = "Number of Magical Runes: {0}";
+            const string msgCh7DecodedLine3 = "Extracted Secret Code: {0}";
+            const string msgCh7DecodeOp4 = "Exit decoding";
+            
             
             //CHAPTER 2 CONSTANTS
             string[] monstersName = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍", "Ancient Dragon 🐉" };
@@ -95,6 +109,13 @@ namespace CodeQuestDLC
                 new string[] { "Cataclysm 🌋", "Portal of Chaos 🌀", "Arcane Blood Pact 🩸", "Elemental Storm ⛈️" },
             };
             
+            //CHAPTER 7 CONSTANTS
+            string[] acientScroll = 
+            {
+                "The 🐲 sleeps in the mountain of fire 🔥",
+                "Ancient magic flows through the crystal caves",
+                "Spell: Ignis 5 🔥, Aqua 6 💧, Terra 3 🌍, Ventus 8 🌪️️"
+            };
             
             //Menu variables
             int menuOption;
@@ -133,6 +154,14 @@ namespace CodeQuestDLC
             int shopOption;
             string shopOptionStr;
             
+            //Chapter 7 variables
+            bool decoded = false;
+            int decodeOption;
+            string decodeOptionStr;
+            bool line1Decoded = false;
+            bool line2Decoded = false;
+            bool line3Decoded = false;
+            
             do
             {
                 do
@@ -153,13 +182,11 @@ namespace CodeQuestDLC
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMenuOption5);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write(msgMenuOption6);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(msgMenuOptionNew);
+                    Console.WriteLine(msgMenuOption6);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption7);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine(msgMenuOptionBlocked);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(msgMenuOptionNew);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMenuOption8);
                     Console.ForegroundColor = ConsoleColor.Gray;
@@ -368,13 +395,70 @@ namespace CodeQuestDLC
                         break;
                     
                     /*
-                     * DEVELOPER OPTIONS
+                     * CHAPTER 7 - DECODE ANCIENT SCROLL
                      */
-                    case 999:
-                        name = "DEVELOPER";
-                        title = titleLevel4;
-                        level = 5;
-                        bits = 1000;
+                    case 7:
+                        //Show messages
+                        Console.WriteLine(msgCh7DecodeHeader);
+                        Console.WriteLine(msgCh7Intro);
+                        do
+                        {
+                            foreach (var line in acientScroll)
+                            {
+                                Console.WriteLine(line);
+                            }
+                            Console.WriteLine(msgCh7DecodeOptions, msgCh7DecodeOp1, msgCh7DecodeOp2, msgCh7DecodeOp3, msgCh7DecodeOp4);
+                            //Select decode option
+                            do
+                            {
+                                decodeOptionStr = Console.ReadLine();
+                            } while (!int.TryParse(decodeOptionStr, out decodeOption) || decodeOption < 1 || decodeOption > 3);
+                            //Decode scroll
+                            switch (decodeOption)
+                            {
+                                case 1:
+                                    //Decipher spell (remove spaces)
+                                    Console.WriteLine(msgCh7DecodedLine1, acientScroll[0].Replace(" ", ""));
+                                    line1Decoded = true;
+                                    break;
+                                case 2:
+                                    //Count magical runes (vowels)
+                                    string lowerLine = acientScroll[1].ToLower();
+                                    int vowelCount = 0;
+                                    foreach (char c in lowerLine)
+                                    {
+                                        if ("aeiouàèéíòóú".Contains(c))
+                                        {
+                                            vowelCount++;
+                                        }
+                                    }
+                                    Console.WriteLine(msgCh7DecodedLine2, vowelCount);
+                                    line2Decoded = true;
+                                    break;
+                                case 3:
+                                    //Extract secret code (numbers)
+                                    string numbers = "";
+
+                                    foreach (char c in acientScroll[2])
+                                    {
+                                        if (char.IsDigit(c))
+                                        {
+                                            numbers += c;
+                                        }
+                                    }
+                                    Console.WriteLine(msgCh7DecodedLine3, numbers);
+                                    line3Decoded = true;
+                                    break;
+                                default:
+                                    Console.WriteLine(msgCh7IncorrectOption);
+                                    break;
+                            }
+                            //Check if all lines decoded
+                            if (line1Decoded && line2Decoded && line3Decoded)
+                            {
+                                Console.WriteLine(msgCh7DecodeSuccess);
+                            }
+                        } while (decodeOption != 4 && !(line1Decoded && line2Decoded && line3Decoded));
                         break;
                     
                     /*
