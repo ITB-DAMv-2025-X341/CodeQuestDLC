@@ -67,6 +67,9 @@ namespace CodeQuestDLC
             const string msgCh5NotEnoughBits = "You don't have enough bits to buy this item.";
             const string msgCh5ItemBought = "You bought a {0}!";
             
+            //CHAPTER 6 MESSAGES
+            const string msgCh6AttacksHeader = "===== ATTACKS =====";
+            
             
             //CHAPTER 2 CONSTANTS
             string[] monstersName = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍", "Ancient Dragon 🐉" };
@@ -81,7 +84,18 @@ namespace CodeQuestDLC
             //CHAPTER 5 CONSTANTS
             string[] shopItems = { "Iron Dagger 🗡️", "Healing Potion ⚗️", "Ancient Key 🗝️", "Crossbow 🏹", "Metal Shield 🛡️"};
             int[] shopItemsPrice = { 30, 10, 50, 40, 20 };
-
+            
+            //CHAPTER 6 CONSTANTS
+            string[][] attacksLvl =
+            {
+                new string[] { "Magic Spark 💫" },
+                new string[] { "Fireball 🔥", "Ice Ray 🥏", "Arcane Shield ⚕️" },
+                new string[] { "Meteor ☄️", "Pure Energy Explosion 💥", "Minor Charm 🎭", "Air Strike 🍃" },
+                new string[] { "Wave of Light ⚜️", "Storm of Wings 🐦" },
+                new string[] { "Cataclysm 🌋", "Portal of Chaos 🌀", "Arcane Blood Pact 🩸", "Elemental Storm ⛈️" },
+            };
+            
+            
             //Menu variables
             int menuOption;
             string menuOptionStr;
@@ -135,17 +149,13 @@ namespace CodeQuestDLC
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMenuOption3);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write(msgMenuOption4);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(msgMenuOptionUpdated);
+                    Console.WriteLine(msgMenuOption4);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write(msgMenuOption5);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(msgMenuOptionNew);
+                    Console.WriteLine(msgMenuOption5);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption6);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine(msgMenuOptionBlocked);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(msgMenuOptionNew);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption7);
                     Console.ForegroundColor = ConsoleColor.Gray;
@@ -341,6 +351,20 @@ namespace CodeQuestDLC
                         {
                             Console.WriteLine(msgCh5NotEnoughBits);
                         }
+                        break;
+                    
+                    /*
+                     * CHAPTER 6 - SHOW ATTACKS BY LVL
+                     */
+                    case 6:
+                       Console.WriteLine(msgCh6AttacksHeader);
+                       for (int i = 1; i <= level; i++)
+                       {
+                           foreach (var attack in attacksLvl[i - 1])
+                           {
+                               Console.WriteLine($"- {attack}");
+                           }
+                       }
                         break;
                     
                     /*
