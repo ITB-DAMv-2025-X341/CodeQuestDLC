@@ -57,6 +57,9 @@ namespace CodeQuestDLC
             const string msgCh3AlreadyMined = "You already mined this location. Try another one.";
             const string msgCh3MineOutOfTries = "You are out of tries! You exit the mine with now {0} bits.";
             
+            //CHAPTER 4 MESSAGES
+            const string msgCh4InventoryHeader = "===== INVENTORY =====";
+            
             //CHAPTER 2 CONSTANTS
             string[] monstersName = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍", "Ancient Dragon 🐉" };
             int[] monstersHp = { 3, 5, 10, 11, 18, 15, 20, 50 };
@@ -79,6 +82,7 @@ namespace CodeQuestDLC
             string title = "";
             int level = 0;
             int bits = 0;
+            string[] inventory = new string[0];
             
             //Chapter 1 variables
             int exp = 0;
@@ -107,21 +111,15 @@ namespace CodeQuestDLC
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMainMenu);
                     Console.WriteLine(name.Equals("") ? null : string.Format(msgMenuPlayer,name,title,level));
-                    Console.Write(msgMenuOption1);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(msgMenuOptionNew);
+                    Console.WriteLine(msgMenuOption1);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write(msgMenuOption2);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine(msgMenuOptionBlocked);
+                    Console.WriteLine(msgMenuOption2);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write(msgMenuOption3);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine(msgMenuOptionBlocked);
+                    Console.WriteLine(msgMenuOption3);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption4);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine(msgMenuOptionBlocked);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(msgMenuOptionNew);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption5);
                     Console.ForegroundColor = ConsoleColor.Gray;
@@ -278,7 +276,18 @@ namespace CodeQuestDLC
                         
                         Console.WriteLine(msgCh3MineOutOfTries, bits);
                         break;
-                        
+                    /*
+                     * CHAPTER 4 - SHOW INVENTORY
+                     */
+                    case 4:
+                        Console.WriteLine(msgCh4InventoryHeader);
+                        //Cycle for slot in inventory
+                        foreach (string slot in inventory)
+                        {
+                            //Show slot
+                            Console.WriteLine(slot);
+                        }
+                        break;
                     
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
