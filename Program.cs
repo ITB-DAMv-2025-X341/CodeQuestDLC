@@ -11,7 +11,8 @@ namespace CodeQuestDLC
             
             //MENU MESSAGES
             const string msgMainMenu = "===== MAIN MENU - CODEQUEST =====";
-            const string msgMenuPlayer = "===== Welcome, {0} the {1} with level {2} =====";
+            const string msgMenuPlayer = "===== Welcome, {0} the {1} with level {2} =====\n";
+            const string msgMenuPlayerResources = "Bits: {0} | Inventory slots: {1}\n";
             const string msgMenuOption1 = "1. Train your wizard"; 
             const string msgMenuOption2 = "2. Increase LVL";
             const string msgMenuOption3 = "3. Loot the mine";
@@ -60,6 +61,13 @@ namespace CodeQuestDLC
             //CHAPTER 4 MESSAGES
             const string msgCh4InventoryHeader = "===== INVENTORY =====";
             
+            //CHAPTER 5 MESSAGES
+            const string msgCh5ShopHeader = "===== WELCOME TO THE SHOP =====";
+            const string msgCh5SelectItem = "Select the item number you want to buy: ";
+            const string msgCh5NotEnoughBits = "You don't have enough bits to buy this item.";
+            const string msgCh5ItemBought = "You bought a {0}!";
+            
+            
             //CHAPTER 2 CONSTANTS
             string[] monstersName = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍", "Ancient Dragon 🐉" };
             int[] monstersHp = { 3, 5, 10, 11, 18, 15, 20, 50 };
@@ -69,6 +77,10 @@ namespace CodeQuestDLC
             const int mapWidth = 5;
             const int mapHeight = 5;
             const int startingTries = 5;
+            
+            //CHAPTER 5 CONSTANTS
+            string[] shopItems = { "Iron Dagger 🗡️", "Healing Potion ⚗️", "Ancient Key 🗝️", "Crossbow 🏹", "Metal Shield 🛡️"};
+            int[] shopItemsPrice = { 30, 10, 50, 40, 20 };
 
             //Menu variables
             int menuOption;
@@ -103,6 +115,9 @@ namespace CodeQuestDLC
             string posXStr, posYStr;
             int posXin, posYin;
             
+            //Chapter 5 variables
+            int shopOption;
+            string shopOptionStr;
             
             do
             {
@@ -110,7 +125,10 @@ namespace CodeQuestDLC
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMainMenu);
-                    Console.WriteLine(name.Equals("") ? null : string.Format(msgMenuPlayer,name,title,level));
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(name.Equals("") ? null : string.Format(msgMenuPlayer,name,title,level));
+                    Console.Write(bits == 0 ? null : string.Format(msgMenuPlayerResources,bits,inventory.Length));
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMenuOption1);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(msgMenuOption2);
@@ -118,12 +136,12 @@ namespace CodeQuestDLC
                     Console.WriteLine(msgMenuOption3);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption4);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(msgMenuOptionNew);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(msgMenuOptionUpdated);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption5);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine(msgMenuOptionBlocked);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(msgMenuOptionNew);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(msgMenuOption6);
                     Console.ForegroundColor = ConsoleColor.Gray;
@@ -289,6 +307,55 @@ namespace CodeQuestDLC
                         }
                         break;
                     
+                    /*
+                     * CHAPTER 5 - BUY ITEMS
+                     */
+                    case 5:
+                        Console.WriteLine(msgCh5ShopHeader);
+                        
+                        //Display all items
+                        for (int i = 0; i < shopItems.Length; i++)
+                        {
+                            string item = shopItems[i];
+                            int price = shopItemsPrice[i];
+                            Console.WriteLine($"{i}. {item} - {price} bits");
+                        }
+
+                        //Select item to buy
+                        do
+                        {
+                            Console.Write(msgCh5SelectItem);
+                            shopOptionStr = Console.ReadLine();
+                        } while (!int.TryParse(shopOptionStr, out shopOption));
+
+                        //Check if enough bits
+                        if (bits >= shopItemsPrice[shopOption])
+                        {
+                            //Buy item
+                            bits -= shopItemsPrice[shopOption];
+                            Array.Resize(ref inventory, inventory.Length + 1);
+                            inventory[inventory.Length - 1] = shopItems[shopOption];
+                            Console.WriteLine(msgCh5ItemBought, shopItems[shopOption]);
+                        }
+                        else
+                        {
+                            Console.WriteLine(msgCh5NotEnoughBits);
+                        }
+                        break;
+                    
+                    /*
+                     * DEVELOPER OPTIONS
+                     */
+                    case 999:
+                        name = "DEVELOPER";
+                        title = titleLevel4;
+                        level = 5;
+                        bits = 1000;
+                        break;
+                    
+                    /*
+                     * INCORRECT OPTION
+                     */
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(msgMenuIncorrectOption);
